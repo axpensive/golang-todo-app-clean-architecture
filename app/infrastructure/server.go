@@ -1,15 +1,11 @@
 package infrastructure
 
 import (
-	"io"
+	"log"
 	"net/http"
 )
 
-func StartAppServer() error {
-	test := func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Test")
-	}
-	http.HandleFunc("/", test)
+func StartAppServer() {
 	// http.HandleFunc("/", top)
 	// http.HandleFunc("/signup", signup)
 	// http.HandleFunc("/login", login)
@@ -22,5 +18,8 @@ func StartAppServer() error {
 	// http.HandleFunc("/todos/edit/", parseURL(todoEdit))
 	// http.HandleFunc("/todos/update/", parseURL(todoUpdate))
 	// http.HandleFunc("/todos/delete/", parseURL(todoDelete))
-	return http.ListenAndServe("localhost:7777", nil)
+	err := http.ListenAndServe("localhost:7777", nil)
+	if err != nil {
+		log.Fatalf("Server down: %s", err)
+	}
 }
