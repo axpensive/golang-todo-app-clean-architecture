@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/axpensive/golang-todo-app-clean-architecture/infrastructure"
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/infrastructure"
 )
 
 func main() {
