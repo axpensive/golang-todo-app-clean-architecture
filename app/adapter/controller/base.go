@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/adapter/gateway/repository"
 )
 
 func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) {
@@ -18,13 +20,13 @@ func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) 
 	templates.ExecuteTemplate(w, "layout", data)
 }
 
-// func session(w http.ResponseWriter, r *http.Request) (sess models.Session, err error) {
-// 	cookie, err := r.Cookie("_cookie")
-// 	if err == nil {
-// 		sess = models.Session{UUID: cookie.Value}
-// 		if ok, _ := sess.CheckSession(); !ok {
-// 			err = fmt.Errorf("invalid session")
-// 		}
-// 	}
-// 	return sess, err
-// }
+func session(w http.ResponseWriter, r *http.Request) (sess repository.Session, err error) {
+	cookie, err := r.Cookie("_cookie")
+	if err == nil {
+		sess = repository.Session{UUID: cookie.Value}
+		if ok, _ := sess.CheckSession(); !ok {
+			err = fmt.Errorf("invalid session")
+		}
+	}
+	return sess, err
+}

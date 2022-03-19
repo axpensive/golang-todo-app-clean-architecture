@@ -1,0 +1,13 @@
+2022/03/20 01:38:01 main.go:11: Server start!!!
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc000120ea0 0xc000076370  }
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc0000ba120 0xc0000b8000  }
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc0000bad80 0xc0000b80a0  }
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc0001219e0 0xc000076410  }
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc0000bb9e0 0xc0000b8140  }
+2022/03/20 01:38:08 base.go:19: &{layout.html 0xc0000ce480 0xc0000b81e0  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc0000ceea0 0xc0000b8280  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc000226a20 0xc000244000  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc0000cf440 0xc0000b8320  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc0002277a0 0xc0002440a0  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc0000dc360 0xc0000b83c0  }
+2022/03/20 01:38:12 base.go:19: &{layout.html 0xc0000dcfc0 0xc0000b8410  }
