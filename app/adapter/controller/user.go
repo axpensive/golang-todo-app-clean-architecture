@@ -7,7 +7,7 @@ import (
 	"github.com/axpensive/golang-todo-app-clean-architecture/app/adapter/gateway/repository"
 )
 
-func signup(w http.ResponseWriter, r *http.Request) {
+func Signup(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
@@ -38,7 +38,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func login(w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	_, err := session(w, r)
 	if err != nil {
 		generateHTML(w, nil, "layout", "public_navbar", "login")
@@ -47,7 +47,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func authenticate(w http.ResponseWriter, r *http.Request) {
+func Authenticate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 
 	user, err := repository.GetUserByEmail(r.PostFormValue("email"))
@@ -74,7 +74,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func logout(w http.ResponseWriter, r *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("_cookie")
 	if err != nil {
 		log.Println(err)

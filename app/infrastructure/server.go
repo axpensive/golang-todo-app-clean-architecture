@@ -33,17 +33,17 @@ func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc
 
 func StartAppServer() {
 	http.HandleFunc("/", controller.TopPage)
-	// http.HandleFunc("/signup", signup)
-	// http.HandleFunc("/login", login)
-	// http.HandleFunc("/authenticate", authenticate)
-	// http.HandleFunc("/logout", logout)
+	http.HandleFunc("/signup", controller.Signup)
+	http.HandleFunc("/login", controller.Login)
+	http.HandleFunc("/authenticate", controller.Authenticate)
+	http.HandleFunc("/logout", controller.Logout)
 	http.HandleFunc("/todos", controller.TodoList)
 	http.HandleFunc("/todos/new", controller.CreateTodo)
 	http.HandleFunc("/todos/save", controller.SaveTodo)
 	// edit/1のようなURLを判定したので/をつける
-	// http.HandleFunc("/todos/edit/", parseURL(controller.EditTodo))
-	// http.HandleFunc("/todos/update/", parseURL(todoUpdate))
-	// http.HandleFunc("/todos/delete/", parseURL(todoDelete))
+	http.HandleFunc("/todos/edit/", parseURL(controller.EditTodo))
+	http.HandleFunc("/todos/update/", parseURL(controller.UpdateTodo))
+	http.HandleFunc("/todos/delete/", parseURL(controller.DeleteTodo))
 	err := http.ListenAndServe("localhost:7777", nil)
 	if err != nil {
 		log.Fatalf("Server down: %s", err)
