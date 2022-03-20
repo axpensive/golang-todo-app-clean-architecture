@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"text/template"
 
@@ -16,7 +15,6 @@ func generateHTML(w http.ResponseWriter, data interface{}, filenames ...string) 
 	}
 	// // エラーの記述省略でmust, エラーが起きたらpanicになる。
 	templates := template.Must(template.ParseFiles(files...))
-	log.Print(templates)
 	templates.ExecuteTemplate(w, "layout", data)
 }
 

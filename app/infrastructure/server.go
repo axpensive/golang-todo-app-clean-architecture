@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/axpensive/golang-todo-app-clean-architecture/app/adapter/controller"
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/config"
 )
 
 var validPath = regexp.MustCompile("^/todos/(edit|update|delete)/([0-9]+)$")
@@ -32,6 +33,10 @@ func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc
 }
 
 func StartAppServer() {
+	// 静的ファイルの設定
+	files := http.FileServer(http.Dir(config.Config.Static))
+	http.Handle("/static/", http.StripPrefix("/static/", files))
+	// テンプレートを使用したページの設定
 	http.HandleFunc("/", controller.TopPage)
 	http.HandleFunc("/signup", controller.Signup)
 	http.HandleFunc("/login", controller.Login)

@@ -27,7 +27,6 @@ func init() {
 
 	if err != nil {
 		log.Fatalln(err)
-		log.Print("err")
 	}
 
 	cmdU := fmt.Sprintf(`create table if not exists %s(
