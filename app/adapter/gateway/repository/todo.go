@@ -3,19 +3,19 @@ package repository
 import (
 	"log"
 	"time"
+
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/entity"
+	// "github.com/axpensive/golang-todo-app-clean-architecture/app/entity"
 )
 
-type Todo struct {
-	ID        int
-	Content   string
-	UserID    int
-	CreatedAt time.Time
-}
+// type repoUser struct {
+// 	entity.User
+// }
 
-func (u *User) CreateTodo(content string) (err error) {
+func CreateTodo(content string, userID int) (err error) {
 	cmd := `insert into todos (content,user_id, created_at) values ($1,$2,$3)`
 
-	_, err = Db.Exec(cmd, content, u.ID, time.Now())
+	_, err = Db.Exec(cmd, content, userID, time.Now())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -23,12 +23,12 @@ func (u *User) CreateTodo(content string) (err error) {
 	return err
 }
 
-func GetTodo(id int) (todo Todo, err error) {
+func GetTodo(todoID int) (todo entity.Todo, err error) {
 	cmd := `select id, content, user_id, created_at from todos where id = $1`
 
-	todo = Todo{}
+	todo = []entity.Todo{}
 	// Scanで出力を変数に代入します。
-	err = Db.QueryRow(cmd, id).Scan(
+	err = Db.QueryRow(cmd, todoID).Scan(
 		&todo.ID,
 		&todo.Content,
 		&todo.UserID,
@@ -37,17 +37,17 @@ func GetTodo(id int) (todo Todo, err error) {
 	return todo, err
 }
 
-func (u *User) GetTodosByUser() (todos []Todo, err error) {
+func GetTodosByUser(userID int) (todos []entity.Todo, err error) {
 	cmd := `select id, content, user_id, created_at from todos where user_id = $1`
 
-	rows, err := Db.Query(cmd, u.ID)
+	rows, err := Db.Query(cmd, userID)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	for rows.Next() {
-		var todo Todo
+		var todo entity.Todo
 
 		err = rows.Scan(
 			&todo.ID,
@@ -60,72 +60,23 @@ func (u *User) GetTodosByUser() (todos []Todo, err error) {
 		}
 		todos = append(todos, todo)
 	}
-
 	rows.Close()
 	return todos, err
 
 }
 
-func GetTodos() (todos []Todo, err error) {
-	cmd := `select id, content, user_id, created_at from todos`
-	rows, err := Db.Query(cmd)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	for rows.Next() {
-		var todo Todo
-		err = rows.Scan(
-			&todo.ID,
-			&todo.Content,
-			&todo.UserID,
-			&todo.CreatedAt,
-		)
-		if err != nil {
-			log.Fatalln(todos, todo)
-		}
-		todos = append(todos, todo)
-	}
-	rows.Close()
-	return todos, err
-}
-
-func (u *User) GetTodos() (todos []Todo, err error) {
-	cmd := `select id, content, user_id, created_at from todos where user_id = $1`
-	rows, err := Db.Query(cmd, u.ID)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	for rows.Next() {
-		var todo Todo
-		err = rows.Scan(
-			&todo.ID,
-			&todo.Content,
-			&todo.UserID,
-			&todo.CreatedAt,
-		)
-		if err != nil {
-			log.Fatalln(todos, todo)
-		}
-		todos = append(todos, todo)
-	}
-	rows.Close()
-	return todos, err
-}
-
-func (t *Todo) UpdateTodo() error {
+func UpdateTodo(todoID int, content string, userID int) error {
 	cmd := `update todos set content = $1, user_id = $2 where id = $3`
-	_, err = Db.Exec(cmd, t.Content, t.UserID, t.ID)
+	_, err = Db.Exec(cmd, content, userID, todoID)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	return err
 }
 
-func (t *Todo) DeleteTodo() error {
+func DeleteTodo(todoID int) error {
 	cmd := `delete from todos where id = $1`
-	_, err = Db.Exec(cmd, t.ID)
+	_, err = Db.Exec(cmd, todoID)
 	if err != nil {
 		log.Fatalln(err)
 	}

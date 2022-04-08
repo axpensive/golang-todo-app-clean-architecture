@@ -33,6 +33,9 @@ func parseURL(fn func(http.ResponseWriter, *http.Request, int)) http.HandlerFunc
 }
 
 func StartAppServer() {
+
+	user := controller.User{}
+
 	// 静的ファイルの設定
 	files := http.FileServer(http.Dir(config.Config.Static))
 	http.Handle("/static/", http.StripPrefix("/static/", files))

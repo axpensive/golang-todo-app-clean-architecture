@@ -1,20 +1,29 @@
 package controller
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/axpensive/golang-todo-app-clean-architecture/app/adapter/gateway/repository"
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/usecase/port"
 )
 
-func TopPage(w http.ResponseWriter, r *http.Request) {
-	_, err := session(w, r)
-	if err != nil {
-		generateHTML(w, "Hello", "layout", "public_navbar", "top")
-	} else {
-		http.Redirect(w, r, "/todos", 302)
-	}
+type Todo struct {
+	// OutputFactory     func(w http.ResponseWriter) port.ITodoOutputPort
+	InputFactory      func(o port.ITodoOutputPort, r port.ITodoRepository) port.ITodoInputPort
+	RepositoryFactory func(c *sql.DB) port.ITodoRepository
+	Conn              *sql.DB
 }
+
+// func TopPage(w http.ResponseWriter, r *http.Request) {
+// 	_, err := session(w, r)
+// 	if err != nil {
+// 		generateHTML(w, "Hello", "layout", "public_navbar", "top")
+// 	} else {
+// 		http.Redirect(w, r, "/todos", 302)
+// 	}
+// }
 
 func TodoList(w http.ResponseWriter, r *http.Request) {
 	sess, err := session(w, r)
@@ -31,16 +40,41 @@ func TodoList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func CreateTodo(w http.ResponseWriter, r *http.Request) {
-	_, err := session(w, r)
-	if err != nil {
-		http.Redirect(w, r, "/login", 302)
-	} else {
-		generateHTML(w, nil, "layout", "private_navbar", "todo_new")
-	}
-}
+// func CreateTodo(w http.ResponseWriter, r *http.Request) {
+// 	_, err := session(w, r)
+// 	if err != nil {
+// 		http.Redirect(w, r, "/login", 302)
+// 	} else {
+// 		generateHTML(w, nil, "layout", "private_navbar", "todo_new")
+// 	}
+// }
 
-func SaveTodo(w http.ResponseWriter, r *http.Request) {
+// func SaveTodo(w http.ResponseWriter, r *http.Request) {
+
+// 	sess, err := session(w, r)
+// 	if err != nil {
+// 		http.Redirect(w, r, "/login", 302)
+// 	} else {
+// 		err = r.ParseForm()
+// 		if err != nil {
+// 			log.Println(err)
+// 		}
+// 		user, err := sess.GetUserBySession()
+
+// 		if err != nil {
+// 			log.Println(err)
+// 		}
+
+// 		content := r.PostFormValue("content")
+// 		if err := user.CreateTodo(content); err != nil {
+// 			log.Println(err)
+// 		}
+// 		http.Redirect(w, r, "/todos", 302)
+// 	}
+
+// }
+func (t *Todo) SaveTodo(w http.ResponseWriter, r *http.Request) {
+
 	sess, err := session(w, r)
 	if err != nil {
 		http.Redirect(w, r, "/login", 302)
@@ -61,6 +95,7 @@ func SaveTodo(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Redirect(w, r, "/todos", 302)
 	}
+
 }
 
 func EditTodo(w http.ResponseWriter, r *http.Request, id int) {

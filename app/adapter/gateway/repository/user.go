@@ -3,6 +3,8 @@ package repository
 import (
 	"log"
 	"time"
+
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/entity"
 )
 
 type User struct {
@@ -12,7 +14,6 @@ type User struct {
 	Email     string
 	Password  string
 	CreatedAt time.Time
-	Todos     []Todo
 }
 
 type Session struct {
@@ -23,7 +24,7 @@ type Session struct {
 	CreatedAt time.Time
 }
 
-func (u *User) CreateUser() (err error) {
+func CreateUser(name string, email string, password string) (err error) {
 	cmd := `insert into users (
 		uuid,
 		name,
@@ -31,15 +32,12 @@ func (u *User) CreateUser() (err error) {
 		password,
 		created_at) values (?,?,?,?,?)`
 
-	_, err = Db.Exec(cmd, createUUID(), u.Name, u.Email, Encrypt(u.Password), time.Now())
-	if err != nil {
-		log.Fatalln(err)
-	}
+	_, err = Db.Exec(cmd, createUUID(), name, email, Encrypt(password), time.Now())
 	return err
 }
 
-func Getuser(id int) (user User, err error) {
-	user = User{}
+func Getuser(id int) (user entity.User, err error) {
+	user = entity.User{}
 	cmd := `select id, uuid, name ,email,password,created_at
 	from users where id = ?`
 	err = Db.QueryRow(cmd, id).Scan(
@@ -53,26 +51,20 @@ func Getuser(id int) (user User, err error) {
 	return user, err
 }
 
-func (u *User) UpdateUser() (err error) {
+func UpdateUser(name string, email string, id int) (err error) {
 	cmd := `update users set name = ?, email =? where id = ?`
-	_, err = Db.Exec(cmd, u.Name, u.Email, u.ID)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	_, err = Db.Exec(cmd, name, email, id)
 	return err
 }
 
-func (u *User) DeleteUser() (err error) {
+func DeleteUser(id int) (err error) {
 	cmd := `delete from users where id = ?`
-	_, err = Db.Exec(cmd, u.ID)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	_, err = Db.Exec(cmd, id)
 	return err
 }
 
-func GetUserByEmail(email string) (user User, err error) {
-	user = User{}
+func GetUserByEmail(email string) (user entity.User, err error) {
+	user = entity.User{}
 	cmd := `select id , uuid, name, email, password, created_at from users where email = ?`
 
 	err = Db.QueryRow(cmd, email).Scan(
@@ -86,21 +78,21 @@ func GetUserByEmail(email string) (user User, err error) {
 	return user, err
 }
 
-func (u *User) CreateSession() (session Session, err error) {
+func CreateSession(name string, email string, id int) (session Session, err error) {
 	session = Session{}
 	cmd1 := `insert into sessions (
 		uuid,
 		email,
 		user_id,
 		created_at) values (?, ?, ?, ?)`
-	_, err = Db.Exec(cmd1, createUUID(), u.Email, u.ID, time.Now())
+	_, err = Db.Exec(cmd1, createUUID(), email, id, time.Now())
 
 	if err != nil {
-		log.Println(err)
+		return session, err
 	}
 
 	cmd2 := `select id, uuid, email, user_id, created_at from sessions where user_id = ? and email = ?`
-	err = Db.QueryRow(cmd2, u.ID, u.Email).Scan(
+	err = Db.QueryRow(cmd2, id, email).Scan(
 		&session.ID,
 		&session.UUID,
 		&session.Email,

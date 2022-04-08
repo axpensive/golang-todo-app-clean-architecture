@@ -1,11 +1,20 @@
 package controller
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/axpensive/golang-todo-app-clean-architecture/app/adapter/gateway/repository"
+	"github.com/axpensive/golang-todo-app-clean-architecture/app/usecase/port"
 )
+
+type User struct {
+	OutputFactory     func(w http.ResponseWriter) port.IUserOutputPort
+	InputFactory      func(o port.IUserOutputPort, r port.IUserRepository) port.IUserInputPort
+	RepositoryFactory func(c *sql.DB) port.IUserRepository
+	Conn              *sql.DB
+}
 
 func Signup(w http.ResponseWriter, r *http.Request) {
 
